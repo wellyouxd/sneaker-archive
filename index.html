@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sneaker Archive</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #f5f4ef;
+    color: #24251f;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d8d7cf;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #78805c;
+}
+
+nav a {
+    color: #55564e;
+    text-decoration: none;
+    font-size: 13px;
+    margin-left: 18px;
+}
+
+.hero {
+    padding: 65px 7% 55px;
+}
+
+.subtitle {
+    color: #78805c;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    font-size: clamp(40px, 8vw, 76px);
+    font-weight: 700;
+    margin: 20px 0;
+    line-height: 1.05;
+}
+
+.hero p {
+    max-width: 430px;
+    color: #77776f;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.section {
+    padding: 35px 7%;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-heading h2 {
+    font-size: 25px;
+}
+
+.section-heading span {
+    color: #85857d;
+    font-size: 12px;
+}
+
+.controls {
+    margin-bottom: 25px;
+}
+
+#search {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d5d4cc;
+    background: #fff;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 14px;
+}
+
+#search:focus {
+    border-color: #78805c;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.filter-btn {
+    padding: 9px 15px;
+    background: transparent;
+    border: 1px solid #d1d0c7;
+    color: #55564e;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background: #78805c;
+    color: white;
+    border-color: #78805c;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e2e1d9;
+}
+
+.card img {
+    width: 100%;
+    height: 210px;
+    object-fit: cover;
+    display: block;
+    background: #e9e8e1;
+}
+
+.info {
+    padding: 18px;
+}
+
+.brand {
+    color: #78805c;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.info h3 {
+    font-size: 19px;
+    margin: 10px 0;
+}
+
+.info p {
+    color: #77776f;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.details {
+    margin-top: 17px;
+    padding: 9px 14px;
+    background: #78805c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.details:hover {
+    background: #626a49;
+}
+
+.empty {
+    display: none;
+    color: #77776f;
+    padding: 25px 0;
+}
+
+.about {
+    border-top: 1px solid #d8d7cf;
+    margin-top: 45px;
+}
+
+.about p {
+    max-width: 600px;
+    color: #77776f;
+    line-height: 1.8;
+    margin-top: 15px;
+}
+
+footer {
+    padding: 25px 7%;
+    border-top: 1px solid #d8d7cf;
+    color: #85857d;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Всплывающее окно */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    background: #f5f4ef;
+    padding: 35px 25px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.modal-content h2 {
+    margin: 18px 0;
+    font-size: 26px;
+}
+
+.modal-content p {
+    color: #77776f;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.close {
+    position: absolute;
+    right: 17px;
+    top: 13px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+@media (max-width: 500px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card img {
+        height: 230px;
+    }
+
+    nav a {
+        margin-left: 8px;
+        font-size: 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">SNEAKER<span> ARCHIVE.</span></div>
+
+    <nav>
+        <a href="#collection">Коллекция</a>
+        <a href="#about">О проекте</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="subtitle">История уличной культуры</div>
+
+    <h1>Кроссовки,<br>которые вошли<br>в историю.</h1>
+
+    <p>
+        Небольшой архив культовых моделей.
+        Здесь собраны интересные пары, их история
+        и особенности дизайна.
+    </p>
+</section>
+
+<section class="section" id="collection">
+
+    <div class="section-heading">
+        <h2>Коллекция</h2>
+        <span>01 / 04</span>
+    </div>
+
+    <div class="controls">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Найти модель..."
+        >
+
+        <div class="filters">
+
+            <button class="filter-btn active"
+            data-brand="all">Все</button>
+
+            <button class="filter-btn"
+            data-brand="nike">Nike</button>
+
+            <button class="filter-btn"
+            data-brand="adidas">Adidas</button>
+
+            <button class="filter-btn"
+            data-brand="new balance">New Balance</button>
+
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <div class="card" data-brand="nike">
+            <img
+            src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=700"
+            alt="Nike Air Jordan 1">
+
+            <div class="info">
+                <div class="brand">NIKE / 1985</div>
+                <h3>Air Jordan 1</h3>
+                <p>Одна из самых известных баскетбольных моделей.</p>
+                <button class="details"
+                data-name="Air Jordan 1">Подробнее</button>
+            </div>
+        </div>
+
+        <div class="card" data-brand="nike">
+            <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700"
+            alt="Nike Air Max 90">
+
+            <div class="info">
+                <div class="brand">NIKE / 1990</div>
+                <h3>Air Max 90</h3>
+                <p>Модель с узнаваемой воздушной вставкой.</p>
+                <button class="details"
+                data-name="Air Max 90">Подробнее</button>
+            </div>
+        </div>
+
+        <div class="card" data-brand="adidas">
+            <img
+            src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=700"
+            alt="Adidas Forum Low">
+
+            <div class="info">
+                <div class="brand">ADIDAS / 1984</div>
+                <h3>Forum Low</h3>
+                <p>Баскетбольное наследие в повседневном стиле.</p>
+                <button class="details"
+                data-name="Forum Low">Подробнее</button>
+            </div>
+        </div>
+
+        <div class="card" data-brand="new balance">
+            <img
+            src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=700"
+            alt="New Balance 990">
+
+            <div class="info">
+                <div class="brand">NEW BALANCE / 1982</div>
+                <h3>990 Series</h3>
+                <p>Классическая линейка с акцентом на комфорт.</p>
+                <button class="details"
+                data-name="990 Series">Подробнее</button>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="empty" id="empty">
+        По вашему запросу ничего не найдено.
+    </p>
+
+</section>
+
+<section class="section about" id="about">
+    <h2>О проекте</h2>
+
+    <p>
+        Sneaker Archive — учебный проект,
+        посвящённый истории и развитию
+        известных моделей кроссовок.
+        Цель проекта — собрать информацию
+        о разных брендах и представить её
+        в удобном каталоге.
+    </p>
+</section>
+
+<footer>
+    SNEAKER ARCHIVE · 2026
+</footer>
+
+<!-- Окно с информацией -->
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+
+        <button class="close" id="closeModal">×</button>
+
+        <div class="subtitle">Информация о модели</div>
+
+        <h2 id="modalTitle"></h2>
+
+        <p id="modalDescription"></p>
+
+    </div>
+</div>
+
+<script>
+
+// Данные о моделях
+
+const modelInfo = {
+    "Air Jordan 1":
+    "Модель Nike Air Jordan 1 появилась в 1985 году. Она была создана для баскетбола и стала одной из самых узнаваемых моделей бренда.",
+
+    "Air Max 90":
+    "Nike Air Max 90 впервые вышли в 1990 году. Их отличительной особенностью стала видимая воздушная вставка в подошве.",
+
+    "Forum Low":
+    "Adidas Forum появились в 1984 году как баскетбольная обувь. Позже модель получила популярность в повседневной моде.",
+
+    "990 Series":
+    "Первая модель New Balance 990 была выпущена в 1982 году. Линейка известна сочетанием комфорта и классического дизайна."
+};
+
+// Получаем элементы страницы
+
+const search = document.getElementById("search");
+const cards = document.querySelectorAll(".card");
+const buttons = document.querySelectorAll(".filter-btn");
+const empty = document.getElementById("empty");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription =
+    document.getElementById("modalDescription");
+const closeModal =
+    document.getElementById("closeModal");
+
+let selectedBrand = "all";
+
+// Поиск и фильтрация
+
+
+function filterCards() {
+
+    const searchText = search.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    cards.forEach(function(card) {
+
+        const name = card.querySelector("h3")
+            .textContent.toLowerCase();
+
+        const brand = card.dataset.brand.toLowerCase();
+
+        const description = card.querySelector(".info p")
+            .textContent.toLowerCase();
+
+        const matchesSearch =
+            name.includes(searchText) ||
+            brand.includes(searchText) ||
+            description.includes(searchText);
+
+        const matchesBrand =
+            selectedBrand === "all" ||
+            brand === selectedBrand;
+
+        const isVisible = matchesSearch && matchesBrand;
+
+        card.style.display = isVisible ? "block" : "none";
+
+        if (isVisible) {
+            visibleCount++;
+        }
+
+    });
+
+    empty.style.display =
+        visibleCount === 0 ? "block" : "none";
+}
+
+
+  
+
+// Реакция на ввод текста
+
+search.addEventListener("input", filterCards);
+
+// Выбор бренда
+
+buttons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        buttons.forEach(function(item) {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        selectedBrand = button.dataset.brand;
+
+        filterCards();
+
+    });
+
+});
+
+// Открытие подробной информации
+
+document.querySelectorAll(".details").forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        const name = button.dataset.name;
+
+        modalTitle.textContent = name;
+
+        modalDescription.textContent = modelInfo[name];
+
+        modal.classList.add("show");
+
+    });
+
+});
+
+// Закрытие окна
+
+closeModal.addEventListener("click", function() {
+    modal.classList.remove("show");
+});
+
+// Закрытие при нажатии за пределами окна
+
+modal.addEventListener("click", function(event) {
+
+    if (event.target === modal) {
+        modal.classList.remove("show");
+    }
+
+});
+
+// Закрытие клавишей Escape
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        modal.classList.remove("show");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
